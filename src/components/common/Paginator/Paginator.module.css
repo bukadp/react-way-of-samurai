@@ -3,6 +3,17 @@
     font-weight: bold;
 }
 
-.cursor{
+.pageNumber{
     cursor: pointer;
+    padding: 2px;
+    border: 1px solid grey;
 }
+
+.paginator {
+    margin: 10px;
+}
+
+/*.pageNumber.selectedPage {
+    font-weight: bold;
+    border-color: black;
+}*/
