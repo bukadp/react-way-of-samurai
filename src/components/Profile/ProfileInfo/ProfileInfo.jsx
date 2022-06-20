@@ -19,32 +19,38 @@ const ProfileInfo = ({profile, status, updateStatus, isOwner, savePhoto, savePro
     }
 
     const onSubmit = (formData) => {
-        saveProfile(formData);
-        setEditMode(false);
+        saveProfile(formData).then(
+            () => {
+                setEditMode(false);
+            }
+        );
     }
 
-    return (
-        <div>
-            <div className={s.descriptionBlock}>
-                <img src={profile.photos.large || userPhoto} className={s.mainPhoto}/>
-                {isOwner && <input type="file"
-                                   onChange={onMainPhotoSelected}/>}
-                {editMode
-                    ? <ProfileDataForm
-                        initialValues={profile}
-                        profile={profile}
-                        onSubmit={onSubmit}/>
-                    : <ProfileData
-                        profile={profile}
-                        isOwner={isOwner}
-                        goToEditMode={()=>{setEditMode(true)}}/>
 
-                }
+return (
+    <div>
+        <div className={s.descriptionBlock}>
+            <img src={profile.photos.large || userPhoto} className={s.mainPhoto}/>
+            {isOwner && <input type="file"
+                               onChange={onMainPhotoSelected}/>}
+            {editMode
+                ? <ProfileDataForm
+                    initialValues={profile}
+                    profile={profile}
+                    onSubmit={onSubmit}/>
+                : <ProfileData
+                    profile={profile}
+                    isOwner={isOwner}
+                    goToEditMode={() => {
+                        setEditMode(true)
+                    }}/>
 
-                <ProfileStatusWithHooks status={status} updateStatus={updateStatus} />
-            </div>
+            }
+
+            <ProfileStatusWithHooks status={status} updateStatus={updateStatus}/>
         </div>
-    )
+    </div>
+)
 }
 
 function ProfileData({profile, isOwner, goToEditMode}) {
@@ -76,7 +82,7 @@ function ProfileData({profile, isOwner, goToEditMode}) {
 
 function Contacts({contactTitle, contactValue}) {
     return (
-        <div className={s.contact} >
+        <div className={s.contact}>
             <i>{contactTitle}:</i> {contactValue}
         </div>
     )
