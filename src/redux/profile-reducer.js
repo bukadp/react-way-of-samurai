@@ -96,7 +96,6 @@ export const saveProfile = (profile) => async (dispatch, getState) => {
        dispatch(getUserProfile(userId));
     }
     else {
-        debugger
         const fieldError = response.data.messages[0]
         const parseFieldError = fieldError.split('>');
         const nameField = parseFieldError[parseFieldError.length-1].slice(0, -1).toLowerCase()
