@@ -13,6 +13,10 @@
     margin: 10px;
 }
 
+.paginatorColor{
+    color: red;
+}
+
 /*.pageNumber.selectedPage {
     font-weight: bold;
     border-color: black;

@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Navbar from './components/Navbar/Navbar';
-import {BrowserRouter, HashRouter, Route, withRouter} from "react-router-dom";
+import {BrowserRouter, HashRouter, Route, Switch, withRouter} from "react-router-dom";
 
 import UsersContainer from "./components/Users/UsersContainer";
 
@@ -14,19 +14,25 @@ import Preloader from "./components/common/Preloader/Preloader";
 import store from "./redux/redux-store";
 import {withSuspense} from "./hoc/withSuspense";
 
-//import DialogsContainer from "./components/Dialogs/DialogsContainer";
-//import ProfileContainer from "./components/Profile/ProfileContainer";
 
 const DialogsContainer = React.lazy(() => import('./components/Dialogs/DialogsContainer'));
 const ProfileContainer = React.lazy(() => import('./components/Profile/ProfileContainer'));
 
 class App extends React.Component {
+/*    catchAllUnhandledErrors = (e: PromiseRejectionEvent) => {
+        alert('Some error occured')
+    }
+    componentWillUnmount() {
+        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+    }*/
+
     componentDidMount() {
         this.props.initializeApp();
-      }
+        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+    }
 
     render() {
-        if (!this.props.initialized){
+        if (!this.props.initialized) {
             return <Preloader/>
         }
 
@@ -35,19 +41,27 @@ class App extends React.Component {
                 <HeaderContainer/>
                 <Navbar/>
                 <div className='app-wrapper-content'>
-                    <React.Suspense fallback={<Preloader/>}>
-                    <Route path='/dialogs'
-                           render={() => <DialogsContainer/>}/>
-                    </React.Suspense>
 
-                    <Route path='/profile/:userId?'
-                           render={withSuspense(ProfileContainer)}/>
 
-                    <Route path='/users'
-                           render={() => <UsersContainer/>}/>
+                        <Route exact path='/'
+                               render={withSuspense(ProfileContainer)}/>
 
-                    <Route path='/login'
-                           render={() => <LoginPage/>}/>
+                        <React.Suspense fallback={<Preloader/>}>
+                            <Route path='/dialogs'
+                                   render={() => <DialogsContainer/>}/>
+                        </React.Suspense>
+
+                        <Route path='/profile/:userId?'
+                               render={withSuspense(ProfileContainer)}/>
+
+                        <Route path='/users'
+                               render={() => <UsersContainer/>}/>
+
+
+                        <Route path='/login'
+                               render={() => <LoginPage/>}/>
+
+
                 </div>
             </div>
         )
@@ -63,13 +77,13 @@ const AppContainer = compose(
     connect(mapStateToProps, {initializeApp}))(App);
 
 
-function SamurajJsApp (props) {
-    return(
-    <HashRouter>
-        <Provider store={store}>
-            <AppContainer/>
-        </Provider>
-    </HashRouter>
+function SamurajJsApp(props) {
+    return (
+        <BrowserRouter>
+            <Provider store={store}>
+                <AppContainer/>
+            </Provider>
+        </BrowserRouter>
     )
 }
 
